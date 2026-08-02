@@ -24,26 +24,26 @@ export enum MoodTopic {
 @Entity('mood_entries')
 export class MoodEntry {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column()
-  userId: string; // FK به جدول users
+  userId!: string; // FK به جدول users
 
   @Column({ type: 'enum', enum: MoodTag })
-  moodTag: MoodTag; // خروجی Claude Haiku از متن آزاد کاربر
+  moodTag!: MoodTag; // خروجی Claude Haiku از متن آزاد کاربر
 
   @Column({ type: 'int' })
-  intensity: number; // ۱ تا ۵
+  intensity!: number; // ۱ تا ۵
 
   @Column({ type: 'enum', enum: MoodTopic, nullable: true })
-  topic: MoodTopic | null;
+  topic!: MoodTopic | null;
 
   @Column({ type: 'text', nullable: true })
-  rawUserText: string | null; // متن اصلی کاربر (اختیاری، کاربر می‌تواند حذفش کند)
+  rawUserText!: string | null; // متن اصلی کاربر (اختیاری، کاربر می‌تواند حذفش کند)
 
   @Column({ type: 'varchar', length: 300, nullable: true })
-  aiSummary: string | null; // خلاصه ≤۵۰ کلمه تولیدشده توسط Haiku
+  aiSummary!: string | null; // خلاصه ≤۵۰ کلمه تولیدشده توسط Haiku
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 }
