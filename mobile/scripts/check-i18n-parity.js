@@ -1,7 +1,7 @@
 /**
- * ابزار QC: بررسی می‌کند که de.json و en.json دقیقاً کلیدهای یکسان دارند.
- * اجرا: node scripts/check-i18n-parity.js
- * این اسکریپت باید در CI اجرا شود؛ اگر شکست بخورد، PR نباید merge شود.
+ * QC tool: verifies that de.json and en.json contain exactly the same keys.
+ * Run: node scripts/check-i18n-parity.js
+ * This script must run in CI; if it fails, the PR must not be merged.
  */
 const de = require('../src/i18n/locales/de.json');
 const en = require('../src/i18n/locales/en.json');

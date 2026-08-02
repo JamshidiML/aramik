@@ -1,115 +1,121 @@
-# Aramik — Master Spec & ۳۰-Day Sprint Plan
-**نسخه ۱.۰ | تهیه‌شده توسط Claude (رهبر فنی) | برای اجرا توسط: محسن (مدیر پروژه) + Codex (پیاده‌سازی) + ChatGPT (بررسی همتا)**
+# Aramik — Master Spec & 30-Day Sprint Plan
 
-این سند تنها منبع حقیقت (single source of truth) پروژه است. هر تصمیم فنی که در چت با Codex یا ChatGPT گرفته می‌شود باید در این فایل هم به‌روزرسانی شود تا هر سه عضو تیم synced بمانند.
+**Version 1.0 | Prepared by Claude (Technical Lead) | For execution by: Mohsen (Project Manager) + Codex (Implementation) + ChatGPT (Peer Review)**
+
+This document is the project's single source of truth. Every technical decision made in a conversation with Codex or ChatGPT must also be updated in this file so all three team members remain synchronized.
 
 ---
 
-## ۱. محدوده MVP (ماه اول) — چه چیزی IN است و چه چیزی OUT
+## 1. First-Month MVP Scope — What Is IN and What Is OUT
 
-### ✅ IN (باید در روز ۳۰ لانچ شود)
-- اپ موبایل iOS + Android (React Native، یک کدبیس)
-- دو زبان کامل: **آلمانی (پیش‌فرض) و انگلیسی**، قابل تغییر در تنظیمات بدون نیاز به آپدیت اپ
-- ثبت‌نام/ورود (ایمیل + Apple/Google Sign-In)
-- چک‌این حالت روحی روزانه (متن آزاد یا انتخاب سریع از بین گزینه‌ها)
-- تولید مدیتیشن شخصی‌سازی‌شده با AI بر اساس چک‌این (متن + صدای TTS)
-- کتابخانه پایه: ۱۵-۲۰ مدیتیشن از‌پیش‌تولیدشده (برای حالت آفلاین/کاربران عجول)
-- حافظه بلندمدت نسخه MVP: ذخیره الگوی حالت روحی هفتگی + یادآوری ساده («این هفته سه بار استرس کاری رو ذکر کردی»)
-- پرداخت درون‌برنامه‌ای (App Store + Google Play IAP) — پلن رایگان محدود / ماهانه / سالانه
-- دکمه لغو اشتراک ساده (الزام قانونی آلمان، §312k BGB)
-- رضایت صریح جداگانه برای داده سلامت روان (GDPR Art. 9)
+### ✅ IN (Must Launch by Day 30)
 
-### ❌ OUT (فاز بعدی — روی این وقت نگذاریم)
-- گواهی ZPP / بازپرداخت بیمه (فرآیند چند ماهه اداری)
-- زبان فارسی/عربی
-- فیچر اجتماعی/کامیونیتی
+- iOS + Android mobile app (React Native, one codebase)
+- Two complete languages: **German (default) and English**, switchable in settings without requiring an app update
+- Registration/sign-in (email + Apple/Google Sign-In)
+- Daily mood check-in (free text or quick selection from predefined options)
+- AI-generated personalized meditation based on the check-in (text + TTS audio)
+- Basic library: 15–20 pre-generated meditations (for offline mode/users in a hurry)
+- MVP long-term memory: store weekly mood patterns + a simple reminder ("You mentioned work stress three times this week")
+- In-app payments (App Store + Google Play IAP) — limited free plan / monthly / annual
+- Simple subscription-cancellation button (German legal requirement, §312k BGB)
+- Separate, explicit consent for mental-health data (GDPR Art. 9)
+
+### ❌ OUT (Later Phase — Do Not Spend Time on These)
+
+- ZPP certification / insurance reimbursement (a multi-month administrative process)
+- Persian/Arabic languages
+- Social/community features
 - Apple Watch / wearable integration
-- محتوای ویدیویی (فقط صوتی در MVP)
+- Video content (audio only for the MVP)
 
 ---
 
-## ۲. Tech Stack
+## 2. Tech Stack
 
-| لایه | انتخاب | دلیل |
+| Layer | Choice | Reason |
 |---|---|---|
-| موبایل | Node.js ≥20.19.4 + React Native 0.81.5 + Expo SDK 54 (TypeScript strict) | یک کدبیس، ریلیز سریع‌تر برای هر دو استور، اکوسیستم i18n قوی (`i18next` + `expo-localization`) |
-| Backend | Node.js ≥20.19.4 (NestJS 11, TypeScript strict) + PostgreSQL | تایپ‌سیف، ساختار ماژولار مناسب برای تیم AI-assisted، Postgres برای رابطه‌ای بودن دیتای کاربر/حافظه |
-| AI — چت اصلی + تولید مدیتیشن | **Claude Sonnet 5** (API) | کیفیت درک هیجانی بالا، تعادل هزینه/کیفیت مناسب MVP |
-| AI — پردازش پس‌زمینه (تگ حالت روحی، خلاصه‌سازی، استخراج الگو) | **Claude Haiku 4.5** (API) | سریع و بسیار ارزان، مناسب کارهای طبقه‌بندی ساختاریافته |
-| TTS (تبدیل متن به صدا) | ElevenLabs (آلمانی + انگلیسی طبیعی) | کیفیت صدای طبیعی که رقبا هم استفاده می‌کنند |
-| احراز هویت | Firebase Auth یا Auth0 | سریع، آماده، پشتیبانی Apple/Google Sign-In از پیش |
-| پرداخت | RevenueCat (روی App Store/Google Play IAP) | مدیریت اشتراک/لغو/رسید در یک لایه به‌جای پیاده‌سازی دستی هر دو استور |
-| هاستینگ | Hetzner یا AWS (منطقه eu-central، فرانکفورت) | سرور در اتحادیه اروپا برای ساده‌سازی GDPR |
-| CI/CD | GitHub Actions | رایگان، استاندارد، به‌راحتی با Codex ادغام می‌شود |
+| Mobile | Node.js ≥20.19.4 + React Native 0.81.5 + Expo SDK 54 (TypeScript strict) | One codebase, faster releases for both stores, strong i18n ecosystem (`i18next` + `expo-localization`) |
+| Backend | Node.js ≥20.19.4 (NestJS 11, TypeScript strict) + PostgreSQL | Type-safe, modular structure suitable for an AI-assisted team; Postgres fits relational user/memory data |
+| AI — Main chat + meditation generation | **Claude Sonnet 5** (API) | High emotional-understanding quality and an appropriate cost/quality balance for the MVP |
+| AI — Background processing (mood tagging, summarization, pattern extraction) | **Claude Haiku 4.5** (API) | Fast and very inexpensive, suitable for structured classification tasks |
+| TTS (text to speech) | ElevenLabs (natural German + English) | Natural voice quality also used by competitors |
+| Authentication | Firebase Auth or Auth0 | Fast, ready-made support for Apple/Google Sign-In |
+| Payments | RevenueCat (on top of App Store/Google Play IAP) | Manages subscriptions/cancellations/receipts in one layer instead of separate implementations for both stores |
+| Hosting | Hetzner or AWS (eu-central region, Frankfurt) | EU-based servers simplify GDPR compliance |
+| CI/CD | GitHub Actions | Free, standard, and easy to integrate with Codex |
 
 ---
 
-## ۳. معماری حافظه بلندمدت (فیچر اصلی رقابتی)
+## 3. Long-Term Memory Architecture (Core Competitive Feature)
 
 ```
-[چک‌این روزانه کاربر]
+[User's daily check-in]
         │
         ▼
-[Claude Haiku: استخراج ساختاریافته]
+[Claude Haiku: structured extraction]
    → mood_tag (enum: stress/anxiety/sadness/calm/...)
    → intensity (1-5)
    → topic (work/relationship/health/sleep/...)
-   → free_text_summary (≤50 کلمه)
+   → free_text_summary (≤50 words)
         │
         ▼
-[ذخیره در PostgreSQL: جدول mood_entries]
+[Store in PostgreSQL: mood_entries table]
         │
-        ▼ (هر هفته / هر ۱۰ چک‌این)
-[Claude Haiku: تجمیع الگو → weekly_pattern_summary]
+        ▼ (weekly / every 10 check-ins)
+[Claude Haiku: aggregate pattern → weekly_pattern_summary]
         │
         ▼
-[Claude Sonnet: هنگام تولید مدیتیشن جدید،
- weekly_pattern_summary + چک‌این امروز را به‌عنوان context دریافت می‌کند
- → مدیتیشن شخصی‌سازی‌شده تولید می‌شود]
+[Claude Sonnet: when generating a new meditation,
+ receives weekly_pattern_summary + today's check-in as context
+ → generates a personalized meditation]
 ```
-این معماری هزینه AI را پایین نگه می‌دارد (مدل گران فقط در لحظه تولید نهایی صدا زده می‌شود) و همان چیزی است که هیچ‌کدام از Calm/Headspace/7Mind/Balloon ندارند.
 
-**نکته حریم خصوصی:** `mood_entries` باید رمزنگاری‌شده در سطح دیتابیس (encryption at rest) باشد و کاربر باید بتواند کل تاریخچه را حذف کند (حق پاک‌سازی GDPR).
+This architecture keeps AI costs low (the expensive model is called only when generating the final output) and provides something none of Calm/Headspace/7Mind/Balloon currently offers.
+
+**Privacy note:** `mood_entries` must be encrypted at the database level (encryption at rest), and the user must be able to delete their complete history (GDPR right to erasure).
 
 ---
 
-## ۴. برنامه اسپرینت ۳۰ روزه (فشرده)
+## 4. 30-Day Sprint Plan (Compressed)
 
-| هفته | تمرکز | تحویلی پایان هفته |
+| Week | Focus | End-of-week Deliverable |
 |---|---|---|
-| **هفته ۱ (روز ۱-۷)** | معماری + اسکلت پروژه + برند | ریپو راه‌اندازی‌شده، CI/CD فعال، لوگو/رنگ/تایپوگرافی نهایی، auth کار می‌کند، اسکلت navigation دو زبانه |
-| **هفته ۲ (روز ۸-۱۴)** | موتور AI شخصی‌سازی + حافظه | چک‌این روزانه کامل، پایپ‌لاین Haiku→ذخیره→Sonnet کار می‌کند، تولید اولین مدیتیشن AI-generated واقعی |
-| **هفته ۳ (روز ۱۵-۲۱)** | کتابخانه پایه + پرداخت + UX پولیش | ۱۵-۲۰ مدیتیشن آماده، RevenueCat وصل، صفحات پرداخت/لغو، تست کامل i18n |
-| **هفته ۴ (روز ۲۲-۳۰)** | تست، QC، رفع باگ، ارسال به استور | تست بتا با ۲۰-۳۰ کاربر واقعی (آلمانی)، رفع باگ‌های بحرانی، ارسال به App Store/Google Play review، مستندات GDPR/حریم خصوصی نهایی |
+| **Week 1 (Days 1–7)** | Architecture + project skeleton + brand | Repository initialized, CI/CD active, final logo/colors/typography, working auth, bilingual navigation skeleton |
+| **Week 2 (Days 8–14)** | AI personalization engine + memory | Complete daily check-in, working Haiku→storage→Sonnet pipeline, first real AI-generated meditation |
+| **Week 3 (Days 15–21)** | Basic library + payments + UX polish | 15–20 prepared meditations, RevenueCat connected, payment/cancellation pages, complete i18n testing |
+| **Week 4 (Days 22–30)** | Testing, QC, bug fixes, store submission | Beta test with 20–30 real German users, critical bug fixes, App Store/Google Play review submission, final GDPR/privacy documentation |
 
-**هشدار واقع‌بینانه:** ریوی اپل معمولاً ۱-۳ روز طول می‌کشد اما گاهی رد می‌شود و نیاز به اصلاح دارد. روز ۲۸-۳۰ باید بافر برای این ریسک باشد، نه کار جدید.
+**Realistic warning:** Apple review usually takes 1–3 days, but an app may be rejected and require changes. Days 28–30 must remain a buffer for this risk, not be allocated to new work.
 
 ---
 
-## ۵. حلقه QC — نحوه ارزیابی خروجی Codex
+## 5. QC Loop — How Codex Output Is Evaluated
 
-هر Pull Request که Codex می‌سازد، این چرخه را طی می‌کند:
+Every Pull Request created by Codex follows this cycle:
 
-1. **Codex** کد را می‌نویسد و PR باز می‌کند.
-2. **ChatGPT** (به‌عنوان بازبین اول) کد را طبق rubric زیر نمره می‌دهد و کامنت می‌گذارد.
-3. **Claude (من)** کد را به‌عنوان بازبین دوم/نهایی بررسی می‌کند — هم منطق را چک می‌کند، هم اینکه مطابق این Master Spec است یا نه.
-4. اگر نمره میانگین دو بازبین **زیر ۸۰** باشد → کامنت‌های اصلاحی مشخص برای Codex نوشته می‌شود → Codex اصلاح می‌کند → چرخه تکرار.
-5. نمره ≥۸۰ → merge.
+1. **Codex** writes the code and opens a PR.
+2. **ChatGPT** (first reviewer) scores the code using the rubric below and leaves comments.
+3. **Claude (me)** performs the second/final review — checking both the logic and compliance with this Master Spec.
+4. If the two reviewers' average score is **below 80**, specific corrective comments are sent to Codex → Codex applies the fixes → the cycle repeats.
+5. A score ≥80 → merge.
 
-### Rubric (هر معیار از ۲۰ نمره، مجموع از ۱۰۰)
-| معیار | چه چیزی بررسی می‌شود |
+### Rubric (20 Points per Criterion, 100 Total)
+
+| Criterion | What Is Evaluated |
 |---|---|
-| صحت عملکردی | آیا دقیقاً طبق مشخصات این سند کار می‌کند؟ |
-| کیفیت کد | خوانایی، نام‌گذاری، عدم تکرار، ساختار ماژولار |
-| امنیت/حریم خصوصی | آیا داده حساس (mood_entries) درست مدیریت می‌شود؟ کلید API لو نرفته؟ |
-| پوشش تست | تست واحد برای منطق حیاتی (پایپ‌لاین حافظه، پرداخت) وجود دارد؟ |
-| تطابق i18n | آیا هر متن جدید در فایل ترجمه DE+EN است، نه hardcoded؟ |
+| Functional correctness | Does it behave exactly as specified in this document? |
+| Code quality | Readability, naming, lack of duplication, modular structure |
+| Security/privacy | Is sensitive data (`mood_entries`) handled correctly? Are API keys protected? |
+| Test coverage | Are there unit tests for critical logic (memory pipeline, payments)? |
+| i18n compliance | Is every new string in both DE and EN, rather than hardcoded? |
 
 ---
 
-## ۶. قدم بعدی فوری (همین امروز)
-1. تو (محسن) یک ریپوی خصوصی در گیت‌هاب می‌سازی و من/ChatGPT/Codex را (با ایمیل یا از طریق invite link) اضافه می‌کنی.
-2. من اسکلت اولیه پروژه (folder structure، package.json، تنظیمات i18n، فایل‌های config) را همین‌جا می‌سازم و به‌عنوان zip/فایل تحویل می‌دهم تا اولین commit را بزنی.
-3. اولین پرامپت آماده برای Codex را می‌نویسم تا کار روز ۱ (auth + navigation اسکلت) را شروع کند.
+## 6. Immediate Next Step (Today)
 
-آیا مرحله ۲ (ساخت اسکلت پروژه) را همین الان شروع کنم؟
+1. You (Mohsen) create a private GitHub repository and add me/ChatGPT/Codex (by email or invite link).
+2. I create the initial project skeleton (folder structure, package.json, i18n settings, config files) here and deliver it as a zip/files so you can make the first commit.
+3. I prepare the first Codex prompt to begin Day 1 work (auth + navigation skeleton).
+
+Should I start step 2 (creating the project skeleton) now?

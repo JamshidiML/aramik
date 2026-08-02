@@ -1,31 +1,36 @@
-# پرامپت آماده برای Codex — روز ۱
+# Ready-to-use Codex Prompt — Day 1
 
-این متن را مستقیم به Codex بده (بدون تغییر، مگر جایی که علامت‌گذاری شده):
+Give the following text directly to Codex (without changes, except where marked):
+
+---
+
+You are working on the `aramik` repository. Before doing any work, read these files:
+
+- `docs/MASTER_SPEC.md` (complete product specification)
+- `mobile/src/i18n/locales/de.json` and `en.json` (all existing UI strings)
+- `mobile/src/navigation/RootNavigator.tsx` (existing navigation skeleton)
+
+## Day 1 Task
+
+Implement the following placeholder screens in `mobile/src/screens/`:
+
+1. **OnboardingScreen.tsx** — A welcome screen using the `onboarding.*` translation keys. The "Get Started" button takes the user to `CheckIn`.
+2. **CheckInScreen.tsx** — A daily check-in form: quick selection from five moods (using the `checkin.mood_*` keys) plus an optional TextInput for free text. For now, the submit button should only store the data in state and navigate to `MeditationPlayer` (the backend API connection will be implemented on Day 2; mock it for now).
+3. **SettingsScreen.tsx** — Include a language switch (change `i18n.language` between `de` and `en`), a "Cancel subscription" button (placeholder alert for now), and a "Delete my data" button (placeholder alert for now).
+
+## Mandatory Rules (According to the QC Rubric — Every Violation Lowers the Score)
+
+- **No text may be written directly in JSX.** Always use `const { t } = useTranslation()` and `t('namespace.key')`.
+- If a new string is needed, add it to **both** `de.json` and `en.json` at the same time (`node mobile/scripts/check-i18n-parity.js` must pass without errors).
+- Use TypeScript strict mode; do not use `any` without justification in a comment.
+- Components must be functional and use hooks (not class components).
+- Use `StyleSheet.create` for styling, not repeated inline style objects.
+- Write at least one simple unit test (Jest + React Native Testing Library) for the mood-selection logic in CheckInScreen.
+
+## Expected Output
+
+A Pull Request titled `feat: day1 onboarding + checkin + settings screens` containing all changes above.
 
 ---
 
-تو در حال کار روی ریپوی `aramik` هستی. قبل از هر کاری، این فایل‌ها را بخوان:
-- `docs/MASTER_SPEC.md` (مشخصات کامل محصول)
-- `mobile/src/i18n/locales/de.json` و `en.json` (تمام رشته‌های متنی موجود)
-- `mobile/src/navigation/RootNavigator.tsx` (اسکلت navigation موجود)
-
-## وظیفه روز ۱
-اسکرین‌های placeholder زیر را در `mobile/src/screens/` پیاده‌سازی کن:
-
-1. **OnboardingScreen.tsx** — صفحه خوش‌آمدگویی با استفاده از کلیدهای `onboarding.*` از فایل ترجمه. دکمه "شروع" کاربر را به `CheckIn` می‌برد.
-2. **CheckInScreen.tsx** — فرم چک‌این روزانه: انتخاب سریع بین ۵ حالت روحی (از کلیدهای `checkin.mood_*`) + یک TextInput اختیاری برای متن آزاد. دکمه submit فعلاً فقط باید داده را در state ذخیره کند و به `MeditationPlayer` navigate کند (اتصال به API بک‌اند در روز ۲ انجام می‌شود، فعلاً mock کن).
-3. **SettingsScreen.tsx** — شامل: سوییچ زبان (تغییر i18n.language بین 'de' و 'en')، دکمه "لغو اشتراک" (فعلاً فقط placeholder alert)، دکمه "حذف داده‌های من" (فعلاً فقط placeholder alert).
-
-## قوانین اجباری (طبق rubric QC — هر تخطی نمره را پایین می‌آورد)
-- **هیچ متنی نباید مستقیم در JSX نوشته شود.** همیشه `const { t } = useTranslation()` و `t('namespace.key')`.
-- اگر رشته جدیدی لازم شد، همزمان به **هر دو** فایل `de.json` و `en.json` اضافه کن (اجرای `node mobile/scripts/check-i18n-parity.js` باید بدون خطا پاس شود).
-- از TypeScript strict استفاده کن؛ هیچ `any` بدون توجیه در کامنت.
-- کامپوننت‌ها باید functional + hooks باشند (نه class component).
-- استایل با `StyleSheet.create`، نه inline style objects تکراری.
-- تست واحد ساده (jest + @testing-library/react-native) حداقل برای منطق انتخاب mood در CheckInScreen بنویس.
-
-## خروجی مورد انتظار
-یک Pull Request با عنوان `feat: day1 onboarding + checkin + settings screens` که شامل تمام تغییرات بالا باشد.
-
----
-*این پرامپت توسط Claude (رهبر فنی پروژه) طبق docs/MASTER_SPEC.md تهیه شده است.*
+*This prompt was prepared by Claude (the project's technical lead) according to `docs/MASTER_SPEC.md`.*

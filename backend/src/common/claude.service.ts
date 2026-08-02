@@ -3,12 +3,12 @@ import Anthropic from '@anthropic-ai/sdk';
 import { ConfigService } from '@nestjs/config';
 
 /**
- * استراتژی دو-مدلی تیم (تصمیم‌گرفته‌شده در Master Spec):
- * - HAIKU: کارهای پس‌زمینه ساختاریافته (تگ‌گذاری حالت روحی، خلاصه‌سازی، تجمیع الگو هفتگی)
- * - SONNET: چت اصلی با کاربر و تولید نهایی متن مدیتیشن (نیاز به درک هیجانی بالا)
+ * The team's two-model strategy (decided in the Master Spec):
+ * - HAIKU: structured background tasks (mood tagging, summarization, weekly pattern aggregation)
+ * - SONNET: main user chat and final meditation-text generation (requires strong emotional understanding)
  *
- * هرگز مدل را در کد دیگر hardcode نکنید - همیشه از این سرویس استفاده کنید
- * تا در صورت نیاز به تغییر مدل، فقط اینجا تغییر کند.
+ * Never hardcode a model elsewhere. Always use this service so a model change only needs to be
+ * made here.
  */
 @Injectable()
 export class ClaudeService {
@@ -21,7 +21,7 @@ export class ClaudeService {
     this.client = new Anthropic({ apiKey: this.config.get<string>('ANTHROPIC_API_KEY') });
   }
 
-  /** استخراج ساختاریافته از متن آزاد کاربر → mood_tag, intensity, topic, summary */
+  /** Extract structured data from the user's free text → mood_tag, intensity, topic, summary. */
   async extractMoodStructured(rawUserText: string): Promise<string> {
     const response = await this.client.messages.create({
       model: this.MODEL_BACKGROUND,
@@ -38,7 +38,7 @@ export class ClaudeService {
       .join('');
   }
 
-  /** تجمیع هفتگی چند ورودی خلاصه‌شده به یک الگوی رفتاری */
+  /** Aggregate several summarized entries into a weekly behavioral pattern. */
   async summarizeWeeklyPattern(entrySummaries: string[]): Promise<string> {
     const response = await this.client.messages.create({
       model: this.MODEL_BACKGROUND,
@@ -52,7 +52,7 @@ export class ClaudeService {
     return response.content.map((b) => (b.type === 'text' ? b.text : '')).join('');
   }
 
-  /** تولید نهایی متن مدیتیشن شخصی‌سازی‌شده - این خروجی بعداً به TTS فرستاده می‌شود */
+  /** Generate the final personalized meditation text; this output is later sent to TTS. */
   async generatePersonalizedMeditation(params: {
     language: 'de' | 'en';
     todayCheckIn: string;

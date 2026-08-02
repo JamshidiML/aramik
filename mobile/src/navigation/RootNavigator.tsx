@@ -1,8 +1,8 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-// TODO(Codex, Day 1): این اسکرین‌ها را در src/screens/ بساز.
-// هر اسکرین باید از useTranslation() برای همه متن‌ها استفاده کند - هیچ متن hardcoded نباشد.
+// TODO(Codex, Day 1): Build these screens in src/screens/.
+// Every screen must use useTranslation() for all text; no text may be hardcoded.
 import OnboardingScreen from '../screens/OnboardingScreen';
 import CheckInScreen from '../screens/CheckInScreen';
 import MeditationPlayerScreen from '../screens/MeditationPlayerScreen';
