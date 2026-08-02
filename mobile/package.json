@@ -7,8 +7,11 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "test": "jest",
+    "test": "jest --no-watchman",
     "lint": "eslint src --ext .ts,.tsx"
+  },
+  "jest": {
+    "preset": "jest-expo"
   },
   "dependencies": {
     "@react-navigation/native": "^6.1.17",
@@ -28,10 +31,12 @@
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
+    "@testing-library/react-native": "^14.0.1",
     "@types/react": "~19.1.10",
     "eslint": "^8.57.0",
     "jest": "^29.7.0",
     "jest-expo": "~54.0.17",
+    "test-renderer": "^1.2.0",
     "typescript": "~5.9.2"
   }
 }
