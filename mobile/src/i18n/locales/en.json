@@ -1,0 +1,42 @@
+{
+  "onboarding": {
+    "welcome_title": "Welcome to Aramik",
+    "welcome_subtitle": "Meditation that remembers you.",
+    "get_started": "Get Started"
+  },
+  "checkin": {
+    "title": "How are you feeling today?",
+    "prompt_placeholder": "Write a bit about what's going on … (optional)",
+    "mood_stress": "Stressed",
+    "mood_anxious": "Anxious",
+    "mood_sad": "Sad",
+    "mood_calm": "Calm",
+    "mood_tired": "Tired",
+    "submit": "Create Meditation"
+  },
+  "meditation": {
+    "generating": "Creating your personal meditation …",
+    "library_title": "Library",
+    "play": "Play"
+  },
+  "settings": {
+    "language": "Language",
+    "subscription": "Subscription",
+    "cancel_subscription": "Cancel Subscription",
+    "delete_data": "Delete My Data",
+    "privacy_policy": "Privacy Policy"
+  },
+  "paywall": {
+    "title": "Aramik Plus",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "family": "Family (up to 4 people)",
+    "restore": "Restore Purchases"
+  },
+  "consent": {
+    "health_data_title": "Processing of Sensitive Data",
+    "health_data_body": "Aramik processes information about your mood to personalize meditations. This is a special category of personal data (GDPR Art. 9). Your explicit consent is required.",
+    "accept": "I Agree",
+    "decline": "Decline"
+  }
+}
