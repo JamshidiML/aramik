@@ -21,6 +21,7 @@
     "@react-navigation/native-stack": "^6.9.26",
     "axios": "^1.7.2",
     "expo": "^54.0.0",
+    "expo-constants": "~18.0.13",
     "expo-localization": "~17.0.9",
     "expo-secure-store": "~15.0.8",
     "i18next": "^23.11.5",

@@ -13,10 +13,13 @@
     "mood_sad": "Sad",
     "mood_calm": "Calm",
     "mood_tired": "Tired",
-    "submit": "Create Meditation"
+    "submit": "Create Meditation",
+    "submit_error": "Your meditation could not be created. Please try again.",
+    "retry": "Try Again"
   },
   "meditation": {
     "generating": "Creating your personal meditation …",
+    "generated_title": "Your Personal Meditation",
     "library_title": "Library",
     "play": "Play"
   },

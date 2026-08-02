@@ -13,7 +13,7 @@ import SettingsScreen from '../screens/SettingsScreen';
 export type RootStackParamList = {
   Onboarding: undefined;
   CheckIn: undefined;
-  MeditationPlayer: { meditationId: string };
+  MeditationPlayer: { meditationId: string; script: string };
   Library: undefined;
   Paywall: undefined;
   Settings: undefined;
