@@ -6,6 +6,7 @@
   },
   "checkin": {
     "title": "How are you feeling today?",
+    "prompt_label": "Optional note",
     "prompt_placeholder": "Write a bit about what's going on … (optional)",
     "mood_stress": "Stressed",
     "mood_anxious": "Anxious",
@@ -20,11 +21,20 @@
     "play": "Play"
   },
   "settings": {
+    "title": "Settings",
     "language": "Language",
+    "language_german": "German",
+    "language_english": "English",
+    "language_switch_label": "Change app language",
     "subscription": "Subscription",
     "cancel_subscription": "Cancel Subscription",
+    "cancel_subscription_placeholder": "Subscription management will be connected in an upcoming release.",
     "delete_data": "Delete My Data",
+    "delete_data_placeholder": "Data deletion will be connected in an upcoming release.",
     "privacy_policy": "Privacy Policy"
+  },
+  "common": {
+    "ok": "OK"
   },
   "paywall": {
     "title": "Aramik Plus",
