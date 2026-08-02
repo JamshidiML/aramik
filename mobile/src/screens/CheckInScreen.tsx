@@ -19,7 +19,7 @@ import { colors } from '../theme/colors';
 
 type CheckInScreenProps = NativeStackScreenProps<RootStackParamList, 'CheckIn'>;
 
-const moodOptions: ReadonlyArray<{ id: MoodId; translationKey: string }> = [
+const moodOptions: readonly { id: MoodId; translationKey: string }[] = [
   { id: 'stress', translationKey: 'checkin.mood_stress' },
   { id: 'anxious', translationKey: 'checkin.mood_anxious' },
   { id: 'sad', translationKey: 'checkin.mood_sad' },
