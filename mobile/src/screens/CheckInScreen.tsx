@@ -21,8 +21,8 @@ type CheckInScreenProps = NativeStackScreenProps<RootStackParamList, 'CheckIn'>;
 
 const moodOptions: readonly { id: MoodId; translationKey: string }[] = [
   { id: 'stress', translationKey: 'checkin.mood_stress' },
-  { id: 'anxious', translationKey: 'checkin.mood_anxious' },
-  { id: 'sad', translationKey: 'checkin.mood_sad' },
+  { id: 'anxiety', translationKey: 'checkin.mood_anxious' },
+  { id: 'sadness', translationKey: 'checkin.mood_sad' },
   { id: 'calm', translationKey: 'checkin.mood_calm' },
   { id: 'tired', translationKey: 'checkin.mood_tired' },
 ];

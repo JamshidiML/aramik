@@ -1,6 +1,9 @@
 import { create } from 'zustand';
 
-export type MoodId = 'stress' | 'anxious' | 'sad' | 'calm' | 'tired';
+export const MOOD_IDS = ['stress', 'anxiety', 'sadness', 'calm', 'tired'] as const;
+
+// Keep these values in sync with MoodTag in backend/src/modules/mood/mood.entity.ts.
+export type MoodId = (typeof MOOD_IDS)[number];
 
 export type CheckInDraft = {
   mood: MoodId;
