@@ -5,12 +5,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 import type { RootStackParamList } from '../navigation/RootNavigator';
+import { useConsentStore } from '../store/consentStore';
 import { colors } from '../theme/colors';
 
 type OnboardingScreenProps = NativeStackScreenProps<RootStackParamList, 'Onboarding'>;
 
 export default function OnboardingScreen({ navigation }: OnboardingScreenProps) {
   const { t } = useTranslation();
+  const consentGiven = useConsentStore((state) => state.consentGiven);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -26,7 +28,7 @@ export default function OnboardingScreen({ navigation }: OnboardingScreenProps) 
 
         <Pressable
           accessibilityRole="button"
-          onPress={() => navigation.navigate('CheckIn')}
+          onPress={() => navigation.navigate(consentGiven === true ? 'CheckIn' : 'Consent')}
           style={({ pressed }) => [styles.primaryButton, pressed && styles.primaryButtonPressed]}
         >
           <Text style={styles.primaryButtonText}>{t('onboarding.get_started')}</Text>
