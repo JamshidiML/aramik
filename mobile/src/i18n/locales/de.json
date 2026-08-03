@@ -34,6 +34,8 @@
     "cancel_subscription_placeholder": "Die Aboverwaltung wird in einer kommenden Version verbunden.",
     "delete_data": "Meine Daten löschen",
     "delete_data_placeholder": "Die Datenlöschung wird in einer kommenden Version verbunden.",
+    "revoke_consent": "Einwilligung für Gesundheitsdaten widerrufen",
+    "revoke_consent_confirmed": "Deine Einwilligung und die temporären Check-in-Daten wurden gelöscht.",
     "privacy_policy": "Datenschutzerklärung"
   },
   "common": {
@@ -50,6 +52,8 @@
     "health_data_title": "Verarbeitung sensibler Daten",
     "health_data_body": "Aramik verarbeitet Angaben zu deiner Stimmung, um Meditationen zu personalisieren. Dies sind besondere Kategorien personenbezogener Daten (Art. 9 DSGVO). Deine ausdrückliche Zustimmung ist erforderlich.",
     "accept": "Ich stimme zu",
-    "decline": "Nicht zustimmen"
+    "decline": "Nicht zustimmen",
+    "decline_explanation": "Personalisierte Meditationen benötigen Angaben zu deiner Stimmung. Du kannst diese Entscheidung jederzeit überdenken.",
+    "reconsider": "Entscheidung überdenken"
   }
 }

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { colors } from '../theme/colors';
 
-// TODO(Codex): این اسکرین placeholder است - طبق docs/MASTER_SPEC.md پیاده‌سازی کامل شود.
+// TODO(Codex): This screen is a placeholder; implement it fully according to docs/MASTER_SPEC.md.
 export default function LibraryScreen() {
   const { t } = useTranslation();
   return (
