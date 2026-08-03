@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 import type { RootStackParamList } from '../navigation/RootNavigator';
 import { generateMeditation, submitCheckIn } from '../services/moodService';
 import { type MoodId, useCheckInStore } from '../store/checkInStore';
+import { useConsentStore } from '../store/consentStore';
 import { colors } from '../theme/colors';
 
 type CheckInScreenProps = NativeStackScreenProps<RootStackParamList, 'CheckIn'>;
@@ -28,8 +29,6 @@ const moodOptions: readonly { id: MoodId; translationKey: string }[] = [
   { id: 'tired', translationKey: 'checkin.mood_tired' },
 ];
 
-const DAY2_MOCK_USER_ID = 'f4f6c776-eec9-4b67-85bd-f95f538a96e8';
-
 export default function CheckInScreen({ navigation }: CheckInScreenProps) {
   const { i18n, t } = useTranslation();
   const [selectedMood, setSelectedMood] = useState<MoodId | null>(null);
@@ -37,14 +36,20 @@ export default function CheckInScreen({ navigation }: CheckInScreenProps) {
   const [hasSubmitError, setHasSubmitError] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const saveCheckIn = useCheckInStore((state) => state.saveCheckIn);
+  const consentGiven = useConsentStore((state) => state.consentGiven);
 
   const handleSubmit = async () => {
     if (selectedMood === null || isSubmitting) {
       return;
     }
 
-    // TODO(Thread 2 integration)
-    const consentGiven = true;
+    if (consentGiven !== true) {
+      navigation.replace('Consent');
+      return;
+    }
+
+    // TODO(auth): replace with real authenticated user id once auth is implemented
+    const userId = 'f4f6c776-eec9-4b67-85bd-f95f538a96e8';
     const normalizedNote = note.trim();
     const language = i18n.language.startsWith('en') ? 'en' : 'de';
 
@@ -54,12 +59,12 @@ export default function CheckInScreen({ navigation }: CheckInScreenProps) {
 
     try {
       const checkIn = await submitCheckIn({
-        userId: DAY2_MOCK_USER_ID,
+        userId,
         rawUserText: normalizedNote || selectedMood,
         consentGiven,
       });
       const meditation = await generateMeditation({
-        userId: DAY2_MOCK_USER_ID,
+        userId,
         language,
         checkInId: checkIn.id,
       });

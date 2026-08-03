@@ -6,6 +6,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react-native';
 import type { RootStackParamList } from '../../navigation/RootNavigator';
 import { generateMeditation, submitCheckIn } from '../../services/moodService';
 import { useCheckInStore } from '../../store/checkInStore';
+import { useConsentStore } from '../../store/consentStore';
 import CheckInScreen from '../CheckInScreen';
 
 jest.mock('../../services/moodService', () => ({
@@ -29,6 +30,7 @@ function createProps(): CheckInScreenProps {
   return {
     navigation: {
       navigate: jest.fn(),
+      replace: jest.fn(),
     } as unknown as CheckInScreenProps['navigation'],
     route: {
       key: 'CheckIn-test',
@@ -41,6 +43,7 @@ function createProps(): CheckInScreenProps {
 describe('CheckInScreen', () => {
   beforeEach(() => {
     useCheckInStore.setState({ latestCheckIn: null });
+    useConsentStore.setState({ consentGiven: true, hasHydrated: true });
     mockSubmitCheckIn.mockReset().mockResolvedValue({
       id: '4f247cae-e092-48c9-8932-1d559b96d2bd',
       moodTag: 'tired',
@@ -122,5 +125,19 @@ describe('CheckInScreen', () => {
         script: 'Take a slow breath and let your shoulders soften.',
       });
     });
+  });
+
+  it('redirects to consent without submitting when consent is not granted', () => {
+    useConsentStore.setState({ consentGiven: false });
+    const props = createProps();
+    const screen = render(<CheckInScreen {...props} />);
+
+    fireEvent.press(screen.getByRole('button', { name: 'checkin.mood_calm' }));
+    fireEvent.press(screen.getByRole('button', { name: 'checkin.submit' }));
+
+    expect(props.navigation.replace).toHaveBeenCalledWith('Consent');
+    expect(mockSubmitCheckIn).not.toHaveBeenCalled();
+    expect(mockGenerateMeditation).not.toHaveBeenCalled();
+    expect(useCheckInStore.getState().latestCheckIn).toBeNull();
   });
 });
