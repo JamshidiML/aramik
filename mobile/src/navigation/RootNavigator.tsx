@@ -18,7 +18,7 @@ export type RootStackParamList = {
   Consent: undefined;
   ConsentDeclined: undefined;
   CheckIn: undefined;
-  MeditationPlayer: { meditationId: string };
+  MeditationPlayer: { meditationId: string; script: string };
   Library: undefined;
   Paywall: undefined;
   Settings: undefined;

@@ -1,32 +1,49 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { ScrollView, StyleSheet, Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
+import type { RootStackParamList } from '../navigation/RootNavigator';
 import { colors } from '../theme/colors';
 
-// TODO(Codex): This screen is a placeholder; implement it fully according to docs/MASTER_SPEC.md.
-export default function MeditationPlayerScreen() {
+type MeditationPlayerScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'MeditationPlayer'
+>;
+
+export default function MeditationPlayerScreen({ route }: MeditationPlayerScreenProps) {
   const { t } = useTranslation();
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>{t('meditation.generating')}</Text>
-    </View>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView contentContainerStyle={styles.content}>
+        <Text style={styles.title}>{t('meditation.generated_title')}</Text>
+        <Text style={styles.script}>{route.params.script}</Text>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
+  safeArea: {
     backgroundColor: colors.background,
     flex: 1,
-    justifyContent: 'center',
-    padding: 24,
   },
-  text: {
+  content: {
+    paddingHorizontal: 24,
+    paddingVertical: 32,
+  },
+  title: {
     color: colors.text,
-    fontSize: 22,
-    fontWeight: '600',
-    lineHeight: 32,
-    textAlign: 'center',
+    fontSize: 28,
+    fontWeight: '700',
+    lineHeight: 36,
+    marginBottom: 24,
+  },
+  script: {
+    color: colors.text,
+    fontSize: 17,
+    lineHeight: 28,
   },
 });

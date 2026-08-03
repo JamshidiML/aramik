@@ -14,6 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 import type { RootStackParamList } from '../navigation/RootNavigator';
+import { generateMeditation, submitCheckIn } from '../services/moodService';
 import { type MoodId, useCheckInStore } from '../store/checkInStore';
 import { colors } from '../theme/colors';
 
@@ -27,19 +28,50 @@ const moodOptions: readonly { id: MoodId; translationKey: string }[] = [
   { id: 'tired', translationKey: 'checkin.mood_tired' },
 ];
 
+const DAY2_MOCK_USER_ID = 'f4f6c776-eec9-4b67-85bd-f95f538a96e8';
+
 export default function CheckInScreen({ navigation }: CheckInScreenProps) {
-  const { t } = useTranslation();
+  const { i18n, t } = useTranslation();
   const [selectedMood, setSelectedMood] = useState<MoodId | null>(null);
   const [note, setNote] = useState('');
+  const [hasSubmitError, setHasSubmitError] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const saveCheckIn = useCheckInStore((state) => state.saveCheckIn);
 
-  const handleSubmit = () => {
-    if (selectedMood === null) {
+  const handleSubmit = async () => {
+    if (selectedMood === null || isSubmitting) {
       return;
     }
 
-    saveCheckIn({ mood: selectedMood, note: note.trim() });
-    navigation.navigate('MeditationPlayer', { meditationId: 'mock-day1-meditation' });
+    // TODO(Thread 2 integration)
+    const consentGiven = true;
+    const normalizedNote = note.trim();
+    const language = i18n.language.startsWith('en') ? 'en' : 'de';
+
+    setHasSubmitError(false);
+    setIsSubmitting(true);
+    saveCheckIn({ mood: selectedMood, note: normalizedNote });
+
+    try {
+      const checkIn = await submitCheckIn({
+        userId: DAY2_MOCK_USER_ID,
+        rawUserText: normalizedNote || selectedMood,
+        consentGiven,
+      });
+      const meditation = await generateMeditation({
+        userId: DAY2_MOCK_USER_ID,
+        language,
+        checkInId: checkIn.id,
+      });
+      navigation.navigate('MeditationPlayer', {
+        meditationId: meditation.id,
+        script: meditation.script,
+      });
+    } catch {
+      setHasSubmitError(true);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -93,17 +125,34 @@ export default function CheckInScreen({ navigation }: CheckInScreenProps) {
 
           <Pressable
             accessibilityRole="button"
-            accessibilityState={{ disabled: selectedMood === null }}
-            disabled={selectedMood === null}
-            onPress={handleSubmit}
+            accessibilityState={{ disabled: selectedMood === null || isSubmitting }}
+            disabled={selectedMood === null || isSubmitting}
+            onPress={() => void handleSubmit()}
             style={({ pressed }) => [
               styles.submitButton,
-              selectedMood === null && styles.submitButtonDisabled,
+              (selectedMood === null || isSubmitting) && styles.submitButtonDisabled,
               pressed && styles.submitButtonPressed,
             ]}
           >
-            <Text style={styles.submitButtonText}>{t('checkin.submit')}</Text>
+            <Text style={styles.submitButtonText}>
+              {t(isSubmitting ? 'meditation.generating' : 'checkin.submit')}
+            </Text>
           </Pressable>
+
+          {hasSubmitError && (
+            <View style={styles.errorContainer}>
+              <Text accessibilityRole="alert" style={styles.errorText}>
+                {t('checkin.submit_error')}
+              </Text>
+              <Pressable
+                accessibilityRole="button"
+                onPress={() => void handleSubmit()}
+                style={({ pressed }) => [styles.retryButton, pressed && styles.submitButtonPressed]}
+              >
+                <Text style={styles.retryButtonText}>{t('checkin.retry')}</Text>
+              </Pressable>
+            </View>
+          )}
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -197,6 +246,31 @@ const styles = StyleSheet.create({
   submitButtonText: {
     color: colors.white,
     fontSize: 17,
+    fontWeight: '700',
+  },
+  errorContainer: {
+    marginTop: 20,
+  },
+  errorText: {
+    color: colors.danger,
+    fontSize: 15,
+    lineHeight: 22,
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  retryButton: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    backgroundColor: colors.dangerSoft,
+    borderRadius: 14,
+    minHeight: 46,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+  },
+  retryButtonText: {
+    color: colors.danger,
+    fontSize: 15,
     fontWeight: '700',
   },
 });
