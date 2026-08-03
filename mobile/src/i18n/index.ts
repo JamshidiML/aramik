@@ -5,8 +5,8 @@ import * as Localization from 'expo-localization';
 import de from './locales/de.json';
 import en from './locales/en.json';
 
-// قانون تیم: هیچ متنی نباید مستقیم در کامپوننت hardcode شود.
-// همیشه از t('namespace.key') استفاده شود تا افزودن زبان‌های آینده (فارسی/عربی) ساده بماند.
+// Team rule: never hardcode text directly in a component.
+// Always use t('namespace.key') so future languages can be added easily.
 
 const deviceLanguage = Localization.getLocales()[0]?.languageCode ?? 'de';
 const supportedLanguages = ['de', 'en'];
@@ -18,7 +18,7 @@ i18n.use(initReactI18next).init({
     de: { translation: de },
     en: { translation: en },
   },
-  lng: defaultLanguage, // کاربر می‌تواند بعداً در تنظیمات دستی تغییر دهد
+  lng: defaultLanguage, // The user can change this manually in settings later.
   fallbackLng: 'de',
   interpolation: { escapeValue: false },
 });
