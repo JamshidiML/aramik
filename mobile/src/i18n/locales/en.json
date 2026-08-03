@@ -31,6 +31,8 @@
     "cancel_subscription_placeholder": "Subscription management will be connected in an upcoming release.",
     "delete_data": "Delete My Data",
     "delete_data_placeholder": "Data deletion will be connected in an upcoming release.",
+    "revoke_consent": "Revoke Health Data Consent",
+    "revoke_consent_confirmed": "Your consent and temporary check-in data have been cleared.",
     "privacy_policy": "Privacy Policy"
   },
   "common": {
@@ -47,6 +49,8 @@
     "health_data_title": "Processing of Sensitive Data",
     "health_data_body": "Aramik processes information about your mood to personalize meditations. This is a special category of personal data (GDPR Art. 9). Your explicit consent is required.",
     "accept": "I Agree",
-    "decline": "Decline"
+    "decline": "Decline",
+    "decline_explanation": "Personalized meditations require mood information. You can reconsider this decision at any time.",
+    "reconsider": "Reconsider"
   }
 }

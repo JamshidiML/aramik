@@ -3,6 +3,7 @@ import { Alert, Pressable, ScrollView, StyleSheet, Switch, Text, View } from 're
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
+import { useConsentStore } from '../store/consentStore';
 import { colors } from '../theme/colors';
 
 const languageSwitchTrackColors = {
@@ -13,6 +14,7 @@ const languageSwitchTrackColors = {
 export default function SettingsScreen() {
   const { i18n, t } = useTranslation();
   const isEnglish = i18n.language === 'en';
+  const revokeConsent = useConsentStore((state) => state.revokeConsent);
 
   const showCancelSubscriptionPlaceholder = () => {
     Alert.alert(
@@ -24,6 +26,13 @@ export default function SettingsScreen() {
 
   const showDeleteDataPlaceholder = () => {
     Alert.alert(t('settings.delete_data'), t('settings.delete_data_placeholder'), [
+      { text: t('common.ok') },
+    ]);
+  };
+
+  const handleRevokeConsent = async () => {
+    await revokeConsent();
+    Alert.alert(t('settings.revoke_consent'), t('settings.revoke_consent_confirmed'), [
       { text: t('common.ok') },
     ]);
   };
@@ -76,6 +85,19 @@ export default function SettingsScreen() {
             ]}
           >
             <Text style={styles.dangerButtonText}>{t('settings.delete_data')}</Text>
+          </Pressable>
+        </View>
+
+        <View style={styles.section}>
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => void handleRevokeConsent()}
+            style={({ pressed }) => [
+              styles.dangerButton,
+              pressed && styles.dangerButtonPressed,
+            ]}
+          >
+            <Text style={styles.dangerButtonText}>{t('settings.revoke_consent')}</Text>
           </Pressable>
         </View>
       </ScrollView>
