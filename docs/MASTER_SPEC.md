@@ -45,6 +45,13 @@ This document is the project's single source of truth. Every technical decision 
 | Hosting | Hetzner or AWS (eu-central region, Frankfurt) | EU-based servers simplify GDPR compliance |
 | CI/CD | GitHub Actions | Free, standard, and easy to integrate with Codex |
 
+### Runtime Reliability and Privacy Decisions
+
+- Structured AI data such as mood extraction must use Claude JSON Schema structured outputs; prompt-only JSON followed by an unguarded `JSON.parse` is not allowed.
+- Every Claude response must be checked for a natural completion reason and validated again at the domain boundary before sensitive health data is stored.
+- Mobile API endpoints are supplied through `EXPO_PUBLIC_API_BASE_URL`; device-specific LAN addresses must not be hardcoded in committed Expo configuration.
+- Development request logs may include method, path, status, duration, provider status, and provider request ID. They must never include health-data request bodies, API keys, or user identifiers.
+
 ---
 
 ## 3. Long-Term Memory Architecture (Core Competitive Feature)

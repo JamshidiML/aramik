@@ -47,6 +47,16 @@ describe('moodService', () => {
         checkInId: checkInResponse.id,
       }),
     ).resolves.toEqual(meditationResponse);
+    expect(postRequest).toHaveBeenNthCalledWith(
+      2,
+      '/meditations/generate',
+      {
+        userId: checkInRequest.userId,
+        language: 'en',
+        checkInId: checkInResponse.id,
+      },
+      { timeout: 120_000 },
+    );
   });
 
   it('propagates network failures without returning partial data', async () => {
