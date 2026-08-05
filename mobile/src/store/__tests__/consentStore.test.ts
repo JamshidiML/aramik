@@ -4,7 +4,7 @@ import { consentStorage } from '../../services/consentStorage';
 import { useCheckInStore } from '../checkInStore';
 import { useConsentStore } from '../consentStore';
 
-let mockStoredConsent: string | null = null;
+let mockStoredConsent: boolean | null = null;
 
 const clearConsent = jest.spyOn(consentStorage, 'clear');
 const getConsent = jest.spyOn(consentStorage, 'get');
@@ -18,7 +18,7 @@ describe('useConsentStore', () => {
     });
     getConsent.mockReset().mockImplementation(async () => mockStoredConsent);
     setConsent.mockReset().mockImplementation(async (consentGiven) => {
-      mockStoredConsent = String(consentGiven);
+      mockStoredConsent = consentGiven;
     });
     useConsentStore.setState({ consentGiven: null, hasHydrated: false });
     useCheckInStore.setState({ latestCheckIn: null });
