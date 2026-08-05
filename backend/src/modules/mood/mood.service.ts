@@ -2,6 +2,7 @@ import {
   BadGatewayException,
   ForbiddenException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -36,6 +37,8 @@ export type WeeklyPatternResponse = {
 
 @Injectable()
 export class MoodEntriesService {
+  private readonly logger = new Logger(MoodEntriesService.name);
+
   constructor(
     @InjectRepository(MoodEntry)
     private readonly moodEntryRepository: Repository<MoodEntry>,
@@ -104,22 +107,20 @@ export class MoodEntriesService {
   }
 
   private async extractMood(rawUserText: string): Promise<ExtractedMood> {
-    let rawResponse: string;
+    let extractedMood: unknown;
     try {
-      rawResponse = await this.claudeService.extractMoodStructured(rawUserText);
-    } catch {
+      extractedMood = await this.claudeService.extractMoodStructured(rawUserText);
+    } catch (error) {
+      this.logger.error(`Mood extraction provider call failed: ${getErrorName(error)}`);
       throw new BadGatewayException('The mood-extraction service is temporarily unavailable.');
     }
 
-    try {
-      const parsedResponse: unknown = JSON.parse(rawResponse);
-      if (!isExtractedMood(parsedResponse)) {
-        throw new Error('Unexpected extraction shape');
-      }
-      return { ...parsedResponse, summary: parsedResponse.summary.trim() };
-    } catch {
+    if (!isExtractedMood(extractedMood)) {
+      this.logger.error('Mood extraction provider returned an invalid structured response.');
       throw new BadGatewayException('The mood-extraction service returned malformed data.');
     }
+
+    return { ...extractedMood, summary: extractedMood.summary.trim() };
   }
 
   private toResponse(entry: MoodEntry): MoodEntryResponse {
@@ -147,6 +148,11 @@ function isExtractedMood(value: unknown): value is ExtractedMood {
     Number(candidate.intensity) <= 5 &&
     (candidate.topic === null || Object.values(MoodTopic).includes(candidate.topic as MoodTopic)) &&
     typeof candidate.summary === 'string' &&
-    candidate.summary.trim().length > 0
+    candidate.summary.trim().length > 0 &&
+    candidate.summary.trim().split(/\s+/u).length <= 50
   );
+}
+
+function getErrorName(error: unknown): string {
+  return error instanceof Error ? error.name : 'UnknownError';
 }

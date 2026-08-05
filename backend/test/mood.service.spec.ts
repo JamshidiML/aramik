@@ -1,4 +1,4 @@
-import { ForbiddenException } from '@nestjs/common';
+import { BadGatewayException, ForbiddenException } from '@nestjs/common';
 import { describe, expect, it, jest } from '@jest/globals';
 import type { Repository } from 'typeorm';
 
@@ -49,5 +49,23 @@ describe('MoodEntriesService', () => {
       service.getWeeklyPattern('f4f6c776-eec9-4b67-85bd-f95f538a96e8'),
     ).resolves.toEqual({ patternSummary: null, entryCount: 2 });
     expect(claudeService.summarizeWeeklyPattern).not.toHaveBeenCalled();
+  });
+
+  it('rejects a malformed structured mood response before persistence', async () => {
+    const { claudeService, service } = createSubject();
+    jest.mocked(claudeService.extractMoodStructured).mockResolvedValue({
+      moodTag: 'calm',
+      intensity: 4,
+      topic: 'other',
+      summary: '',
+    });
+
+    await expect(
+      service.createMoodEntry({
+        userId: 'f4f6c776-eec9-4b67-85bd-f95f538a96e8',
+        rawUserText: 'I feel calm today.',
+        consentGiven: true,
+      }),
+    ).rejects.toBeInstanceOf(BadGatewayException);
   });
 });

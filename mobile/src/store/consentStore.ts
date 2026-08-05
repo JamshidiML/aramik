@@ -18,7 +18,7 @@ export const useConsentStore = create<ConsentState>((set) => ({
     try {
       const storedConsent = await consentStorage.get();
       set({
-        consentGiven: storedConsent === null ? null : storedConsent === 'true',
+        consentGiven: storedConsent,
         hasHydrated: true,
       });
     } catch {

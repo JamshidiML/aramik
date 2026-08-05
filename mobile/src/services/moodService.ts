@@ -1,5 +1,7 @@
 import { apiClient } from './apiClient';
 
+const MEDITATION_GENERATION_TIMEOUT_MS = 120_000;
+
 export type MoodTag = 'stress' | 'anxiety' | 'sadness' | 'calm' | 'tired';
 export type MoodTopic = 'work' | 'relationship' | 'health' | 'sleep' | 'other';
 export type MeditationLanguage = 'de' | 'en';
@@ -67,7 +69,9 @@ export async function getWeeklyPattern(userId: string): Promise<WeeklyPatternRes
 export async function generateMeditation(
   request: GenerateMeditationRequest,
 ): Promise<GenerateMeditationResponse> {
-  const response = await apiClient.post<unknown>('/meditations/generate', request);
+  const response = await apiClient.post<unknown>('/meditations/generate', request, {
+    timeout: MEDITATION_GENERATION_TIMEOUT_MS,
+  });
   if (!isGenerateMeditationResponse(response.data)) {
     throw new ApiContractError('The meditation API returned a malformed response.');
   }
