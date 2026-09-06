@@ -1,4 +1,24 @@
 {
+  "auth": {
+    "sign_in_title": "Welcome back",
+    "sign_up_title": "Create your account",
+    "email_label": "Email",
+    "email_placeholder": "you@example.com",
+    "password_label": "Password",
+    "password_placeholder": "••••••••",
+    "password_hint": "At least 8 characters.",
+    "sign_in_submit": "Sign In",
+    "signing_in": "Signing in …",
+    "sign_up_submit": "Create Account",
+    "signing_up": "Creating account …",
+    "switch_to_sign_up": "Don't have an account? Sign up",
+    "switch_to_sign_in": "Already have an account? Sign in",
+    "error_generic": "Something went wrong. Please check your details and try again.",
+    "continue_with_apple": "Continue with Apple",
+    "continue_with_google": "Continue with Google",
+    "oauth_unavailable_title": "Not Available Yet",
+    "oauth_unavailable_body": "Sign-in with Apple and Google will be connected in an upcoming release. Please use email for now."
+  },
   "onboarding": {
     "welcome_title": "Welcome to Aramik",
     "welcome_subtitle": "Meditation that remembers you.",
@@ -36,7 +56,8 @@
     "delete_data_placeholder": "Data deletion will be connected in an upcoming release.",
     "revoke_consent": "Revoke Health Data Consent",
     "revoke_consent_confirmed": "Your consent and temporary check-in data have been cleared.",
-    "privacy_policy": "Privacy Policy"
+    "privacy_policy": "Privacy Policy",
+    "sign_out": "Sign Out"
   },
   "common": {
     "ok": "OK"

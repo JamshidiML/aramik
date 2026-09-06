@@ -2,6 +2,32 @@
 
 This is the single source of truth for request and response shapes. All Day 2 implementations must code against this contract exactly.
 
+## Authentication
+
+Every endpoint below requires `Authorization: Bearer <accessToken>`, obtained from
+`POST /auth/register` or `POST /auth/login` (see `docs/AUTH_SETUP.md`). There is no
+`userId` field on any request anymore — the backend derives it from the token, and
+rejects requests with a missing/invalid token as `401`. This is enforced server-side
+(`JwtAuthGuard`), the same way GDPR consent is — see `CLAUDE.md`.
+
+### POST /auth/register / POST /auth/login
+
+**Request:**
+
+```json
+{ "email": "string", "password": "string (min 8 chars on register)" }
+```
+
+**Response `201`/`200`:**
+
+```json
+{ "accessToken": "string (JWT)", "userId": "uuid", "email": "string" }
+```
+
+`register` returns `409` if the email is already taken; `login` returns `401` for a
+wrong email or password (the same error for both, so login can't be used to enumerate
+registered emails).
+
 ## POST /mood-entries
 
 Creates a check-in, runs Haiku extraction, and stores it.
@@ -10,7 +36,6 @@ Creates a check-in, runs Haiku extraction, and stores it.
 
 ```json
 {
-  "userId": "string (uuid)",
   "rawUserText": "string | null",
   "consentGiven": true
 }
@@ -31,9 +56,10 @@ Creates a check-in, runs Haiku extraction, and stores it.
 }
 ```
 
-## GET /mood-entries/weekly-pattern?userId=xxx
+## GET /mood-entries/weekly-pattern
 
-Returns the aggregated pattern, or null for new users.
+Returns the aggregated pattern, or null for new users. No query parameters — the user
+comes from the bearer token.
 
 **Response `200`:**
 
@@ -50,7 +76,6 @@ Returns the aggregated pattern, or null for new users.
 
 ```json
 {
-  "userId": "string (uuid)",
   "language": "de | en",
   "checkInId": "uuid"
 }

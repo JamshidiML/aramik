@@ -1,20 +1,22 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 
+import { CurrentUser } from '../auth/current-user.decorator';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateMoodEntryDto } from './dto/create-mood-entry.dto';
-import { WeeklyPatternQueryDto } from './dto/weekly-pattern-query.dto';
 import { MoodEntriesService } from './mood.service';
 
 @Controller('mood-entries')
+@UseGuards(JwtAuthGuard)
 export class MoodEntriesController {
   constructor(private readonly moodEntriesService: MoodEntriesService) {}
 
   @Post()
-  create(@Body() dto: CreateMoodEntryDto) {
-    return this.moodEntriesService.createMoodEntry(dto);
+  create(@Body() dto: CreateMoodEntryDto, @CurrentUser() userId: string) {
+    return this.moodEntriesService.createMoodEntry(dto, userId);
   }
 
   @Get('weekly-pattern')
-  getWeeklyPattern(@Query() query: WeeklyPatternQueryDto) {
-    return this.moodEntriesService.getWeeklyPattern(query.userId);
+  getWeeklyPattern(@CurrentUser() userId: string) {
+    return this.moodEntriesService.getWeeklyPattern(userId);
   }
 }

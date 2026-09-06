@@ -100,7 +100,6 @@ describe('CheckInScreen', () => {
       });
     });
     expect(mockSubmitCheckIn).toHaveBeenCalledWith({
-      userId: 'f4f6c776-eec9-4b67-85bd-f95f538a96e8',
       rawUserText: 'Need deeper rest',
       consentGiven: true,
     });

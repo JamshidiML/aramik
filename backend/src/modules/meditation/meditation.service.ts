@@ -23,9 +23,9 @@ export class MeditationService {
     private readonly claudeService: ClaudeService,
   ) {}
 
-  async generate(dto: GenerateMeditationDto): Promise<MeditationResponse> {
-    const checkIn = await this.moodEntriesService.getEntryForUser(dto.checkInId, dto.userId);
-    const weeklyPattern = await this.moodEntriesService.getWeeklyPattern(dto.userId);
+  async generate(dto: GenerateMeditationDto, userId: string): Promise<MeditationResponse> {
+    const checkIn = await this.moodEntriesService.getEntryForUser(dto.checkInId, userId);
+    const weeklyPattern = await this.moodEntriesService.getWeeklyPattern(userId);
     const todayCheckIn =
       checkIn.rawUserText?.trim() || checkIn.aiSummary?.trim() || checkIn.moodTag;
 
@@ -46,7 +46,7 @@ export class MeditationService {
     }
 
     const meditation = this.meditationRepository.create({
-      userId: dto.userId,
+      userId,
       script: normalizedScript,
       language: dto.language,
     });

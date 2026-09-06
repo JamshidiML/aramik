@@ -42,14 +42,14 @@ export class MoodEntriesService {
     private readonly claudeService: ClaudeService,
   ) {}
 
-  async createMoodEntry(dto: CreateMoodEntryDto): Promise<MoodEntryResponse> {
+  async createMoodEntry(dto: CreateMoodEntryDto, userId: string): Promise<MoodEntryResponse> {
     if (dto.consentGiven !== true) {
       throw new ForbiddenException('Explicit consent is required to process health data.');
     }
 
     const extractedMood = await this.extractMood(dto.rawUserText ?? '');
     const moodEntry = this.moodEntryRepository.create({
-      userId: dto.userId,
+      userId,
       rawUserText: dto.rawUserText,
       moodTag: extractedMood.moodTag,
       intensity: extractedMood.intensity,

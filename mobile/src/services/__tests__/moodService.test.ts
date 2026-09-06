@@ -10,7 +10,6 @@ import {
 const postRequest = jest.spyOn(apiClient, 'post');
 
 const checkInRequest = {
-  userId: 'f4f6c776-eec9-4b67-85bd-f95f538a96e8',
   rawUserText: 'Work felt overwhelming today.',
   consentGiven: true,
 } as const;
@@ -42,7 +41,6 @@ describe('moodService', () => {
     await expect(submitCheckIn(checkInRequest)).resolves.toEqual(checkInResponse);
     await expect(
       generateMeditation({
-        userId: checkInRequest.userId,
         language: 'en',
         checkInId: checkInResponse.id,
       }),

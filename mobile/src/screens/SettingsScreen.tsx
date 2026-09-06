@@ -1,8 +1,11 @@
 import React from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
+import type { RootStackParamList } from '../navigation/RootNavigator';
+import { useAuthStore } from '../store/authStore';
 import { useConsentStore } from '../store/consentStore';
 import { colors } from '../theme/colors';
 
@@ -11,10 +14,13 @@ const languageSwitchTrackColors = {
   true: colors.primary,
 };
 
-export default function SettingsScreen() {
+type SettingsScreenProps = NativeStackScreenProps<RootStackParamList, 'Settings'>;
+
+export default function SettingsScreen({ navigation }: SettingsScreenProps) {
   const { i18n, t } = useTranslation();
   const isEnglish = i18n.language === 'en';
   const revokeConsent = useConsentStore((state) => state.revokeConsent);
+  const signOut = useAuthStore((state) => state.signOut);
 
   const showCancelSubscriptionPlaceholder = () => {
     Alert.alert(
@@ -35,6 +41,11 @@ export default function SettingsScreen() {
     Alert.alert(t('settings.revoke_consent'), t('settings.revoke_consent_confirmed'), [
       { text: t('common.ok') },
     ]);
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigation.reset({ index: 0, routes: [{ name: 'SignIn' }] });
   };
 
   return (
@@ -98,6 +109,16 @@ export default function SettingsScreen() {
             ]}
           >
             <Text style={styles.dangerButtonText}>{t('settings.revoke_consent')}</Text>
+          </Pressable>
+        </View>
+
+        <View style={styles.section}>
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => void handleSignOut()}
+            style={({ pressed }) => [styles.actionButton, pressed && styles.actionButtonPressed]}
+          >
+            <Text style={styles.actionButtonText}>{t('settings.sign_out')}</Text>
           </Pressable>
         </View>
       </ScrollView>

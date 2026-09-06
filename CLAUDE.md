@@ -18,7 +18,9 @@ aramik/
 **`docs/MASTER_SPEC.md` is the project's single source of truth** for scope, tech-stack
 decisions, and the AI memory architecture — read it before making any scope or
 architecture change. `docs/DAY2_API_CONTRACT.md` is the authoritative request/response
-shape for the mood/meditation endpoints; mobile and backend must both match it exactly.
+shape for the auth/mood/meditation endpoints; mobile and backend must both match it
+exactly. `docs/AUTH_SETUP.md` lists which MVP integrations (Apple/Google sign-in, TTS,
+payments, hosting) are blocked on external accounts only the project owner can create.
 
 ## Commands
 
@@ -99,13 +101,22 @@ Rules encoded in `ClaudeService`, not to be bypassed elsewhere:
 
 - `AppModule` wires `ConfigModule` (global env), `TypeOrmModule` (Postgres, entities
   autoloaded, `synchronize` only when `DB_SYNCHRONIZE=true`), `CommonModule`
-  (`ClaudeService`), `MoodModule`, `MeditationModule`.
+  (`ClaudeService`), `AuthModule`, `MoodModule`, `MeditationModule`.
 - Each feature module follows controller → service → TypeORM entity, with
   `class-validator` DTOs (`ValidationPipe` is global with `whitelist` +
   `forbidNonWhitelisted` in `main.ts`, so unlisted fields are rejected, not ignored).
 - `MeditationService` depends on `MoodEntriesService` directly (not through HTTP) to
   fetch the check-in and weekly pattern — cross-module calls go through injected
   services, not internal HTTP requests.
+- **Auth is email/password JWT today** (`src/modules/auth`): `AuthService` hashes
+  passwords with `bcryptjs` and issues a JWT (`JwtService`, secret from `JWT_SECRET`).
+  `AuthModule` is `@Global()` so `JwtAuthGuard` can be applied on any controller without
+  importing AuthModule's internals. Apple/Google sign-in are UI stubs only — see
+  `docs/AUTH_SETUP.md` for exactly what's blocking them.
+- **Every mood/meditation endpoint requires `JwtAuthGuard`**, and reads the caller's id
+  via the `@CurrentUser()` decorator (`request.userId`, set by the guard from the JWT)
+  — never from a client-supplied `userId` field; there isn't one anymore. Follow this
+  pattern for any new authenticated endpoint.
 - **GDPR consent is enforced server-side**: `MoodEntriesService.createMoodEntry` throws
   `ForbiddenException` unless `consentGiven === true` on the request body. This is the
   final enforcement point (see `docs/DAY2_API_CONTRACT.md`) — the mobile consent gate is
@@ -116,17 +127,26 @@ Rules encoded in `ClaudeService`, not to be bypassed elsewhere:
 
 ### Mobile (Expo / React Native)
 
-- Navigation is one native stack (`RootNavigator.tsx`) gated by consent: it renders
-  `Onboarding` until `useConsentStore` resolves `consentGiven === true` (persisted via
-  `expo-secure-store` in `consentStorage.ts`), otherwise `CheckIn`. Revoking consent
-  clears both the consent store and `useCheckInStore`.
-- State is Zustand, split by concern: `consentStore` (persisted, source of truth for the
-  nav gate) and `checkInStore` (in-memory draft of the current check-in).
-- `mobile/src/services/moodService.ts` wraps the three API calls and runtime-validates
-  every response shape (`isSubmitCheckInResponse`, etc.) before returning typed data —
-  follow this pattern rather than trusting `axios` responses raw when touching the API
-  layer. `MoodId` in `checkInStore.ts` must stay in sync with backend `MoodTag`
-  (commented in the source).
+- Navigation is one native stack (`RootNavigator.tsx`) gated by auth, then consent:
+  `resolveInitialRouteName` sends an unauthenticated user to `SignIn`, then an
+  authenticated-but-not-yet-consented one to `Onboarding`, otherwise `CheckIn`. This only
+  decides the *initial* route — React Navigation doesn't react to store changes after
+  mount, so every screen that changes auth/consent state must itself call
+  `navigation.replace(...)`/`.reset(...)` afterwards (see `SignInScreen`, `ConsentScreen`,
+  `SettingsScreen`'s sign-out). Follow this pattern for any new gate.
+- State is Zustand, split by concern: `authStore` (persisted session/token),
+  `consentStore` (persisted, source of truth for the consent gate), and `checkInStore`
+  (in-memory draft of the current check-in). Signing out clears the token and the
+  check-in draft but intentionally leaves consent untouched — it isn't scoped per
+  account in this codebase.
+- `apiClient.ts` holds the bearer token in a module-level variable (`setAuthToken`)
+  rather than importing `authStore` directly, to avoid a circular import (`authStore` →
+  `authService` → `apiClient`). Call `setAuthToken` wherever `authStore`'s token changes.
+- `mobile/src/services/moodService.ts` and `authService.ts` wrap their API calls and
+  runtime-validate every response shape (`isSubmitCheckInResponse`, etc.) before
+  returning typed data — follow this pattern rather than trusting `axios` responses raw
+  when touching the API layer. `MoodId` in `checkInStore.ts` must stay in sync with
+  backend `MoodTag` (commented in the source).
 - **i18n is mandatory**: every string goes through `useTranslation()`/`t()`, defined in
   both `src/i18n/locales/de.json` and `en.json`. `scripts/check-i18n-parity.js` fails CI
   if the two files' key sets diverge — add a key to both files in the same change.

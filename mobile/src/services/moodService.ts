@@ -5,7 +5,6 @@ export type MoodTopic = 'work' | 'relationship' | 'health' | 'sleep' | 'other';
 export type MeditationLanguage = 'de' | 'en';
 
 export type SubmitCheckInRequest = {
-  userId: string;
   rawUserText: string | null;
   consentGiven: true;
 };
@@ -25,7 +24,6 @@ export type WeeklyPatternResponse = {
 };
 
 export type GenerateMeditationRequest = {
-  userId: string;
   language: MeditationLanguage;
   checkInId: string;
 };
@@ -54,10 +52,8 @@ export async function submitCheckIn(
   return response.data;
 }
 
-export async function getWeeklyPattern(userId: string): Promise<WeeklyPatternResponse> {
-  const response = await apiClient.get<unknown>('/mood-entries/weekly-pattern', {
-    params: { userId },
-  });
+export async function getWeeklyPattern(): Promise<WeeklyPatternResponse> {
+  const response = await apiClient.get<unknown>('/mood-entries/weekly-pattern');
   if (!isWeeklyPatternResponse(response.data)) {
     throw new ApiContractError('The weekly-pattern API returned a malformed response.');
   }

@@ -48,8 +48,6 @@ export default function CheckInScreen({ navigation }: CheckInScreenProps) {
       return;
     }
 
-    // TODO(auth): replace with real authenticated user id once auth is implemented
-    const userId = 'f4f6c776-eec9-4b67-85bd-f95f538a96e8';
     const normalizedNote = note.trim();
     const language = i18n.language.startsWith('en') ? 'en' : 'de';
 
@@ -59,12 +57,10 @@ export default function CheckInScreen({ navigation }: CheckInScreenProps) {
 
     try {
       const checkIn = await submitCheckIn({
-        userId,
         rawUserText: normalizedNote || selectedMood,
         consentGiven,
       });
       const meditation = await generateMeditation({
-        userId,
         language,
         checkInId: checkIn.id,
       });

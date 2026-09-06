@@ -29,11 +29,13 @@ describe('MoodEntriesService', () => {
     const { claudeService, service } = createSubject();
 
     await expect(
-      service.createMoodEntry({
-        userId: 'f4f6c776-eec9-4b67-85bd-f95f538a96e8',
-        rawUserText: 'Work felt overwhelming today.',
-        consentGiven: false,
-      }),
+      service.createMoodEntry(
+        {
+          rawUserText: 'Work felt overwhelming today.',
+          consentGiven: false,
+        },
+        'f4f6c776-eec9-4b67-85bd-f95f538a96e8',
+      ),
     ).rejects.toBeInstanceOf(ForbiddenException);
     expect(claudeService.extractMoodStructured).not.toHaveBeenCalled();
   });

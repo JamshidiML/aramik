@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { CommonModule } from './common/common.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { MeditationModule } from './modules/meditation/meditation.module';
 import { MoodModule } from './modules/mood/mood.module';
 
@@ -24,6 +25,7 @@ import { MoodModule } from './modules/mood/mood.module';
       }),
     }),
     CommonModule,
+    AuthModule,
     MoodModule,
     MeditationModule,
   ],

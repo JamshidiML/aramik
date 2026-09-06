@@ -1,4 +1,24 @@
 {
+  "auth": {
+    "sign_in_title": "Willkommen zurück",
+    "sign_up_title": "Konto erstellen",
+    "email_label": "E-Mail",
+    "email_placeholder": "du@beispiel.de",
+    "password_label": "Passwort",
+    "password_placeholder": "••••••••",
+    "password_hint": "Mindestens 8 Zeichen.",
+    "sign_in_submit": "Anmelden",
+    "signing_in": "Anmeldung läuft …",
+    "sign_up_submit": "Konto erstellen",
+    "signing_up": "Konto wird erstellt …",
+    "switch_to_sign_up": "Noch kein Konto? Registrieren",
+    "switch_to_sign_in": "Bereits ein Konto? Anmelden",
+    "error_generic": "Etwas ist schiefgelaufen. Bitte überprüfe deine Angaben und versuche es erneut.",
+    "continue_with_apple": "Mit Apple fortfahren",
+    "continue_with_google": "Mit Google fortfahren",
+    "oauth_unavailable_title": "Noch nicht verfügbar",
+    "oauth_unavailable_body": "Die Anmeldung mit Apple und Google wird in einer kommenden Version verbunden. Bitte nutze vorerst die E-Mail-Anmeldung."
+  },
   "onboarding": {
     "welcome_title": "Willkommen bei Aramik",
     "welcome_subtitle": "Meditation, die sich an dich erinnert.",
@@ -36,7 +56,8 @@
     "delete_data_placeholder": "Die Datenlöschung wird in einer kommenden Version verbunden.",
     "revoke_consent": "Einwilligung für Gesundheitsdaten widerrufen",
     "revoke_consent_confirmed": "Deine Einwilligung und die temporären Check-in-Daten wurden gelöscht.",
-    "privacy_policy": "Datenschutzerklärung"
+    "privacy_policy": "Datenschutzerklärung",
+    "sign_out": "Abmelden"
   },
   "common": {
     "ok": "OK"

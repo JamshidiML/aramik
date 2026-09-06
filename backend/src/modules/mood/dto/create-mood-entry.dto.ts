@@ -1,9 +1,6 @@
-import { IsBoolean, IsDefined, IsString, IsUUID, ValidateIf } from 'class-validator';
+import { IsBoolean, IsDefined, IsString, ValidateIf } from 'class-validator';
 
 export class CreateMoodEntryDto {
-  @IsUUID()
-  userId!: string;
-
   @IsDefined()
   @ValidateIf((_object, value: unknown) => value !== null)
   @IsString()
